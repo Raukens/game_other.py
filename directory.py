@@ -1,18 +1,14 @@
-
-'''
-немного изменил структуру словарей
-'''
 category_dict = {
-    'Film & TV': 1,
-    'History': 2,
-    'Music': 3,
-    'Arts & Literature': 4,
-    'Geography': 5,
-    'Science': 6,
-    'Food & Drink': 7,
-    'Sport & Leisure': 8,
-    'General Knowledge': 9,
-    'Society & Culture': 10,
+    1: 'Film & TV',
+    2: 'History',
+    3: 'Music',
+    4: 'Arts & Literature',
+    5: 'Geography',
+    6: 'Science',
+    7: 'Food & Drink',
+    8: 'Sport & Leisure',
+    9: 'General Knowledge',
+    10: 'Society & Culture',
 }
 difficulty_dict = {
     'easy': 200,

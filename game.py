@@ -6,7 +6,7 @@ from directory import players_list
 
 # соответственно изменился вывод категорий
 for category_key, category_value in category_dict.items():
-    print(f"{category_value}.{category_key}")
+    print(f"{category_key}.{category_value}")
 # изменилась логика проверки результатов и перехода
 
 
@@ -27,7 +27,7 @@ while True:
 players_count = int(players)
 
 i = 0
-questions = test.resp()
+questions = test.resp(question_num_int, players_count)
 players_list_new = random.sample(players_list, len(questions))
 results_list = {}
 
