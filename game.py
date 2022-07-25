@@ -1,51 +1,25 @@
 import random
+
+import check
+
 import test
-from directory import category_dict
-from directory import difficulty_dict
-from directory import players_list
+
+from reference import category_dict
+from reference import players_list
+
 
 # соответственно изменился вывод категорий
 for category_key, category_value in category_dict.items():
     print(f"{category_key}.{category_value}")
-# изменилась логика проверки результатов и перехода
+cats_count = 10
+max_players = 6
 
-
-question_num = input("Введите номер желаемой категории: ")
-while True:
-    if int(question_num) in range(1, 11):
-        break
-    else:
-        question_num = input("Введенное значение должно быть цифрой до 10 включительно, повторите ввод: ")
-question_num_int = int(question_num)
-
+category_numb = input("Введите номер желаемой категории: ")
+check.check_cats(category_numb, cats_count)
 players = input("Введите количество игроков(до 6): ")
-while True:
-    if int(players) in range(1, 7):
-        break
-    else:
-        players = input("Введенное значение должно быть цифрой до 6 включительно, повторите ввод: ")
-players_count = int(players)
+check.check_players(players, max_players)
 
-i = 0
-questions = test.resp(question_num_int, players_count)
-players_list_new = random.sample(players_list, len(questions))
-results_list = {}
+questions = test.resp(category_numb, players)
+players_list = random.sample(players_list, len(questions))
 
-for question in questions:
-    i += 1
-    print(f"внимание, вопрос № {i}")
-    print(question.get('question'))
-   # был исключен цикл определяющий сложность
-    points = difficulty_dict[question.get('difficulty')]
-    for player_in_game in players_list_new:
-        player_answer = input(f"Игрок {player_in_game} введите ваш ответ: ")
-        if player_answer.casefold() in question.get('correctAnswer').casefold():
-            print(f"ваш ответ верный и вы заработали {points} очков")
-            results_list[player_in_game] = points
-            break
-        else:
-            print("к сожалению вы ответили неправильно")
-            results_list[player_in_game] = 0
-print("Игра окончена, результаты следующие:")
-for player_name, player_points in results_list.items():
-    print(player_name, player_points)
+check.check_conditions(questions, players_list)

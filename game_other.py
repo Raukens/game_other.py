@@ -1,9 +1,9 @@
 import random
 import requests
 
-from directory import category_dict
-from directory import difficulty_dict
-from directory import players_list
+from reference import category_dict
+from reference import difficulty_dict
+from reference import players_list
 
 # соответственно изменился вывод категорий
 for category_key, category_value in category_dict.items():
@@ -11,13 +11,13 @@ for category_key, category_value in category_dict.items():
 # изменилась логика проверки результатов и перехода
 
 
-question_num = input("Введите номер желаемой категории: ")
+category_numb = input("Введите номер желаемой категории: ")
 while True:
-    if int(question_num) in range(1, 11):
+    if int(category_numb) in range(1, 11):
         break
     else:
-        question_num = input("Введенное значение должно быть цифрой до 10 включительно, повторите ввод: ")
-question_num_int = int(question_num)
+        category_numb = input("Введенное значение должно быть цифрой до 10 включительно, повторите ввод: ")
+category_numb = int(category_numb)
 
 players = input("Введите количество игроков(до 6): ")
 while True:
@@ -25,34 +25,46 @@ while True:
         break
     else:
         players = input("Введенное значение должно быть цифрой до 6 включительно, повторите ввод: ")
-players_count = int(players)
+players = int(players)
 
-for key, value in category_dict.items():
-    if question_num_int == value:
-        question_category = key
+question_category = category_dict[int(category_numb)]
 questions_url = "https://the-trivia-api.com/api/questions?categories=" + str(question_category) + "&limit=" + str(
-    players_count)
+    players)
 questions = requests.get(questions_url).json()
 
-i = 0
-players_list_new = random.sample(players_list, len(questions))
-results_list = {}
 
+i = 0
+
+players_list = random.sample(players_list, len(questions))
+results_dict = dict.fromkeys(players_list, 0)
 for question in questions:
-    i += 1
-    print(f"внимание, вопрос № {i}")
-    print(question.get('question'))
-   # был исключен цикл определяющий сложность
+
     points = difficulty_dict[question.get('difficulty')]
-    for player_in_game in players_list_new:
-        player_answer = input(f"Игрок {player_in_game} введите ваш ответ: ")
-        if player_answer.casefold() in question.get('correctAnswer').casefold():
-            print(f"ваш ответ верный и вы заработали {points} очков")
-            results_list[player_in_game] = points
-            break
-        else:
-            print("к сожалению вы ответили неправильно")
-            results_list[player_in_game] = 0
+    print(f"внимание игрок {players_list[i]}, ваш вопрос № {i+1} со сложностью {points}:")
+    print(question.get('question'))
+    player_answer = input(f"Введите ваш ответ: ")
+    player_answer = player_answer.casefold()
+    correct_answer = question.get('correctAnswer').casefold()
+    print(players_list)
+    if player_answer in correct_answer:
+        print(f"Поздравляем, ваш ответ верный. Вы заработали {points} очков")
+        results_dict[players_list[i]] += points
+        i += 1
+    else:
+        print("к сожалению вы ответили неправильно")
+        new_players = list(players_list)
+        new_players.remove(players_list[i])
+        print(new_players)
+        for player in new_players:
+            player_answer = input(f"Игрок {player} введите ваш ответ: ")
+            player_answer = player_answer.casefold()
+            if player_answer in correct_answer:
+                print(f"Поздравляем, ваш ответ верный. Вы заработали {points} очков")
+                results_dict[player] += points
+                break
+            else:
+                print("к сожалению вы ответили неправильно")
+        i += 1
 print("Игра окончена, результаты следующие:")
-for player_name, player_points in results_list.items():
+for player_name, player_points in results_dict.items():
     print(player_name, player_points)
